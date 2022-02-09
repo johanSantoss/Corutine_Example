@@ -24,7 +24,7 @@ suspend fun progresBarLive(bar: ProgressBar, status : Int, btnPausa : View) {
             bar.incrementProgressBy(subida)
             Thread.sleep(100)
         }
-        btnPausa.isEnabled = FALSE
+//        btnPausa.isEnabled = FALSE
     }
 
 }

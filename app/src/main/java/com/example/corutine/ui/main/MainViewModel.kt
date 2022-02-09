@@ -74,6 +74,7 @@ class MainViewModel : ViewModel() {
                 val success = withContext(Dispatchers.IO) {
                     progresBarLive(bar, progress2.value!!, btnPause)
                 }
+
                 // main
                 btnStart.isEnabled = Boolean.TRUE
                 resetProgress1()
