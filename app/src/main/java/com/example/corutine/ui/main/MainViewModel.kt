@@ -58,7 +58,7 @@ class MainViewModel : ViewModel() {
                 btnStart.isEnabled = Boolean.FALSE
                 // other thread
                 val success = withContext(Dispatchers.IO) {
-                    progresBarLive(bar, progress1.value!!, btnPause)
+                    progresBarLive(bar, progress1.value!!)
                 }
                 // main
                 btnStart.isEnabled = Boolean.TRUE
@@ -72,7 +72,7 @@ class MainViewModel : ViewModel() {
                 btnStart.isEnabled = Boolean.FALSE
                 // other thread
                 val success = withContext(Dispatchers.IO) {
-                    progresBarLive(bar, progress2.value!!, btnPause)
+                    progresBarLive(bar, progress2.value!!)
                 }
 
                 // main

@@ -20,6 +20,7 @@
             android:layout_height="31dp"
             android:indeterminate="false"
             android:max="100"
+            android:progress=""
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
