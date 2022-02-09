@@ -16,14 +16,13 @@ import kotlin.random.Random
 const val TAG = "break"
 
 
-suspend fun progresBarLive(bar: ProgressBar, status : Int) {
+suspend fun progresBarLive(bar: ProgressBar, status : Int, nBar : Int) {
     return withContext(Dispatchers.IO) {
         val subida = 1
         bar.progress = status
         while (bar.progress < bar.max){
             bar.incrementProgressBy(subida)
-            Thread.sleep(100)
+            delay(50)
         }
     }
-
 }

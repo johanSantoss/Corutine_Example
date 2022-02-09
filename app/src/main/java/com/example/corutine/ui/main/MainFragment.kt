@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.example.corutine.MainActivity
 import com.example.corutine.R
 import com.example.corutine.databinding.MainFragmentBinding
 import com.example.corutine.progresBarLive
@@ -49,68 +50,58 @@ class MainFragment : Fragment() {
         // generar viewModel
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         // set estado inicial de las bar
-        setBarStatus(binding.proBar1, binding.proBar2)
+//        setBarStatus(binding.proBar1, binding.proBar2)
 
         // Bar - 1
         binding.btnStartPB1.setOnClickListener {
-            /**
-             *             viewModel.progressBar1(viewModel.progress, it, binding.proBar1)
-             *           GlobalScope.launch(Dispatchers.Main) {
-             *               it.isEnabled = FALSE
-             *               val success = withContext(Dispatchers.IO){
-             *                   prueba1(binding.proBar1)
-             *                   progresBarLive(binding.proBar1)
-             *                   viewModel.progressBar1(binding.proBar1)
-             *               }
-             *               it.isEnabled = TRUE
-             *           }
-             */
-            viewModel.startBar(binding.proBar1, it, BAR1, binding.btnPausePB1)
-            binding.btnPausePB1.isEnabled = TRUE
-            binding.btnCancelPB1.isEnabled = TRUE
+            startBar1()
         }
         binding.btnPausePB1.setOnClickListener {
-            viewModel.pauseBar(binding.proBar1, binding.btnStartPB1, BAR1)
+            binding.btnPausePB1.isEnabled = FALSE
+            viewModel.pauseBar(binding.proBar1, BAR1, binding.btnStartPB1)
         }
         binding.btnCancelPB1.setOnClickListener {
             binding.btnPausePB1.isEnabled = FALSE
             it.isEnabled = FALSE
-            viewModel.cancelBar(binding.proBar1, binding.btnStartPB1, BAR1)
+            viewModel.restartBar(binding.proBar1, BAR1)
+            binding.btnStartPB1.isEnabled = TRUE
         }
 
         // Bar - 2
         binding.btnStartPB2.setOnClickListener {
-            binding.btnPausePB2.isEnabled = TRUE
-            binding.btnCancelPB2.isEnabled = TRUE
-            viewModel.startBar(binding.proBar2, it, BAR2, binding.btnPausePB2)
-
+            startBar2()
         }
         binding.btnPausePB2.setOnClickListener {
-            viewModel.pauseBar(binding.proBar2, binding.btnStartPB2, BAR2)
+            binding.btnPausePB2.isEnabled = FALSE
+            viewModel.pauseBar(binding.proBar2, BAR2, binding.btnStartPB2)
         }
         binding.btnCancelPB2.setOnClickListener {
             binding.btnPausePB2.isEnabled = FALSE
             it.isEnabled = FALSE
-            viewModel.cancelBar(binding.proBar2, binding.btnStartPB2, BAR2)
+            viewModel.restartBar(binding.proBar2, BAR2)
+            binding.btnStartPB2.isEnabled = TRUE
         }
 
+        if (viewModel.runBar1.value == 1) startBar1()
+        if (viewModel.runBar2.value == 1) startBar2()
 
 
         return binding.root
     }
 
-    private fun setBarStatus(bar1: ProgressBar, bar2: ProgressBar) {
-        bar1.progress = viewModel.progress1.value!!
-        bar1.max = MAX_BAR
-
-        bar2.progress = viewModel.progress2.value!!
-        bar2.max = MAX_BAR
-
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         saveStatusBars()
+    }
+    private fun startBar1(){
+        viewModel.startBar(binding.proBar1, binding.btnStartPB1, BAR1, binding.btnPausePB1, binding.btnCancelPB1)
+        binding.btnPausePB1.isEnabled = TRUE
+        binding.btnCancelPB1.isEnabled = TRUE
+    }
+    private fun startBar2(){
+        viewModel.startBar(binding.proBar2, binding.btnStartPB2, BAR2, binding.btnPausePB2, binding.btnCancelPB2)
+        binding.btnPausePB2.isEnabled = TRUE
+        binding.btnCancelPB2.isEnabled = TRUE
     }
 
     private fun saveStatusBars() {

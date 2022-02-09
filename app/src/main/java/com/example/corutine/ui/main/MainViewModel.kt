@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.corutine.MainActivity
 import com.example.corutine.progresBarLive
 import kotlinx.coroutines.*
 import java.lang.Boolean
@@ -36,110 +37,97 @@ class MainViewModel : ViewModel() {
         _progress2.value = 0
     }
 
+    // bar1 - funtion
+    private val _runBar1 = MutableLiveData<Int>(0)
+    val runBar1: LiveData<Int> get() = _runBar1
+    fun enableBar1 (){
+        _runBar1.value = 1
+    }
+    fun disenableBar1(){
+        _runBar1.value = 0
+    }
+    // bar2 - funtion
+    private val _runBar2 = MutableLiveData<Int>(0)
+    val runBar2: LiveData<Int> get() = _runBar2
+    fun enableBar2 (){
+        _runBar2.value = 1
+    }
+    fun disenableBar2(){
+        _runBar2.value = 0
+    }
+
 
     // flujo de trabajo
     var job1: Job? = null
     var job2: Job? = null
-    fun resetJob(job: Int){
-        if (job == 1) {
-            job1 = null
-        } else {
-            job2 = null
-        }
-    }
 
 
-    fun startBar(bar : ProgressBar, btnStart: View, nBar : Int, btnPause : View) {
+    fun startBar(bar : ProgressBar, btnStart : View, nBar : Int, btnPause : View, btnCancel : View) {
         // main thread
         if (nBar == 1) {
             job1 = viewModelScope.launch(Dispatchers.Main) {
-                // main
-                bar.visibility = VISIBLE
                 btnStart.isEnabled = Boolean.FALSE
-                // other thread
-                val success = withContext(Dispatchers.IO) {
-                    progresBarLive(bar, progress1.value!!)
-                }
-                // main
+                enableBar1()
+                val success = withContext(Dispatchers.IO) { progresBarLive(bar, progress1.value!!, nBar) }
+                btnPause.isEnabled = Boolean.FALSE
+                btnCancel.isEnabled = Boolean.FALSE
                 btnStart.isEnabled = Boolean.TRUE
                 resetProgress1()
-
             }
         } else {
             job2 = viewModelScope.launch(Dispatchers.Main) {
-                // main
-                bar.visibility = VISIBLE
                 btnStart.isEnabled = Boolean.FALSE
-                // other thread
-                val success = withContext(Dispatchers.IO) {
-                    progresBarLive(bar, progress2.value!!)
-                }
-
-                // main
+                enableBar2()
+                val success = withContext(Dispatchers.IO) { progresBarLive(bar, progress2.value!!, nBar) }
+                btnPause.isEnabled = Boolean.FALSE
+                btnCancel.isEnabled = Boolean.FALSE
                 btnStart.isEnabled = Boolean.TRUE
-                resetProgress1()
+                resetProgress2()
             }
         }
     }
-    private fun restartBar(bar: ProgressBar, buton: View, nBar: Int){
+    fun restartBar(bar: ProgressBar, nBar: Int){
         if (nBar == 1){
+            job1!!.cancel()
             resetProgress1()
+            disenableBar1()
             bar.progress = progress1.value!!
-            bar.visibility = INVISIBLE
-            if (!buton.isEnabled) buton.isEnabled = Boolean.TRUE
         } else {
+            job2!!.cancel()
             resetProgress2()
+            disenableBar2()
             bar.progress = progress2.value!!
-            bar.visibility = INVISIBLE
-            if (!buton.isEnabled) buton.isEnabled = Boolean.TRUE
         }
     }
-    fun pauseBar(bar: ProgressBar, buton: View, nBar: Int){
+    fun pauseBar(bar: ProgressBar, nBar: Int, btnStart: View){
         if (nBar == 1){
             if (job1 != null){
                 job1!!.cancel()
-                resetJob(nBar)
                 setProgress1(bar.progress)
-                buton.isEnabled = Boolean.TRUE
+                btnStart.isEnabled = Boolean.TRUE
             }
         } else {
             if (job2 != null){
                 job2!!.cancel()
-                resetJob(nBar)
                 setProgress2(bar.progress)
-                buton.isEnabled = Boolean.TRUE
+                btnStart.isEnabled = Boolean.TRUE
             }
-        }
-    }
-    fun cancelBar(bar: ProgressBar, buton: View, nBar: Int){
-        if (nBar == 1){
-            if (job1 != null){
-                job1?.cancel()
-            }
-            resetJob(nBar)
-            restartBar(bar, buton, nBar)
-        } else {
-            job2?.apply {
-                if (isActive) cancel()
-            }
-            resetJob(nBar)
-            restartBar(bar, buton, nBar)
         }
     }
 
-    // limpieza de recursos
-    override fun onCleared() {
-        super.onCleared()
-        // comprobamos si está activo cada unos de las coroutine
-        job1?.apply {
-            if (isActive)
-                cancel()
-        }
-        job2?.apply {
-            if (isActive)
-                cancel()
-        }
-    }
+//    // limpieza de recursos
+//    override fun onCleared() {
+//        super.onCleared()
+//        // comprobamos si está activo cada unos de las coroutine
+//        job1?.apply {
+//            if (isActive)
+//                cancel()
+//        }
+//        job2?.apply {
+//            if (isActive)
+//                cancel()
+//        }
+//    }
 
 
 }
