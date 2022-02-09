@@ -20,7 +20,7 @@
             android:layout_height="31dp"
             android:indeterminate="false"
             android:max="100"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +43,7 @@
             android:id="@+id/btnPausePB1"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:enabled="false"
             android:text="@string/pause"
             app:layout_constraintBottom_toBottomOf="@+id/btnStartPB1"
             app:layout_constraintEnd_toStartOf="@+id/btnCancelPB1"
@@ -54,23 +55,12 @@
             android:id="@+id/btnCancelPB1"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:enabled="false"
             android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="@+id/btnPausePB1"
-            app:layout_constraintEnd_toStartOf="@+id/btnResPB1"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnPausePB1"
             app:layout_constraintTop_toTopOf="@+id/btnPausePB1" />
-
-        <Button
-            android:id="@+id/btnResPB1"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:text="@string/restart"
-            app:layout_constraintBottom_toBottomOf="@+id/btnCancelPB1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btnCancelPB1"
-            app:layout_constraintTop_toTopOf="@+id/btnCancelPB1" />
 
         <ProgressBar
             android:id="@+id/proBar2"
@@ -79,7 +69,7 @@
             android:layout_height="48dp"
             android:indeterminate="false"
             android:max="100"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,6 +92,7 @@
             android:id="@+id/btnPausePB2"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:enabled="false"
             android:text="@string/pause"
             app:layout_constraintBottom_toBottomOf="@+id/btnStartPB2"
             app:layout_constraintEnd_toStartOf="@+id/btnCancelPB2"
@@ -113,22 +104,12 @@
             android:id="@+id/btnCancelPB2"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:enabled="false"
             android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="@+id/btnPausePB2"
-            app:layout_constraintEnd_toStartOf="@+id/btnResPB2"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnPausePB2"
             app:layout_constraintTop_toTopOf="@+id/btnPausePB2" />
 
-        <Button
-            android:id="@+id/btnResPB2"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:text="@string/restart"
-            app:layout_constraintBottom_toBottomOf="@+id/btnCancelPB2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btnCancelPB2"
-            app:layout_constraintTop_toTopOf="@+id/btnCancelPB2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

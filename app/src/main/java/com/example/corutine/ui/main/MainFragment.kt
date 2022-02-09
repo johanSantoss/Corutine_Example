@@ -18,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Boolean
 import java.lang.Boolean.FALSE
 import java.lang.Boolean.TRUE
 
@@ -26,8 +25,9 @@ class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() = MainFragment()
-        const val MIN_BAR = 0
         const val MAX_BAR = 100
+        const val BAR1 = 1
+        const val BAR2 = 2
     }
 
     private lateinit var viewModel: MainViewModel
@@ -46,61 +46,77 @@ class MainFragment : Fragment() {
             container,
             false
         )
+        // generar viewModel
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        // set estado inicial de las bar
+        setBarStatus(binding.proBar1, binding.proBar2)
 
+        // Bar - 1
         binding.btnStartPB1.setOnClickListener {
-//            viewModel.progressBar1(viewModel.progress, it, binding.proBar1)
-//            GlobalScope.launch(Dispatchers.Main) {
-//                it.isEnabled = FALSE
-//                val success = withContext(Dispatchers.IO){
-////                    prueba1(binding.proBar1)
-//                    progresBarLive(binding.proBar1)
-////                    viewModel.progressBar1(binding.proBar1)
-//                }
-//                it.isEnabled = TRUE
-//            }
-            viewModel.progressBar1(binding.proBar1, it)
+            /**
+             *             viewModel.progressBar1(viewModel.progress, it, binding.proBar1)
+             *           GlobalScope.launch(Dispatchers.Main) {
+             *               it.isEnabled = FALSE
+             *               val success = withContext(Dispatchers.IO){
+             *                   prueba1(binding.proBar1)
+             *                   progresBarLive(binding.proBar1)
+             *                   viewModel.progressBar1(binding.proBar1)
+             *               }
+             *               it.isEnabled = TRUE
+             *           }
+             */
+            viewModel.startBar(binding.proBar1, it, BAR1, binding.btnPausePB1)
+            binding.btnPausePB1.isEnabled = TRUE
+            binding.btnCancelPB1.isEnabled = TRUE
+        }
+        binding.btnPausePB1.setOnClickListener {
+            viewModel.pauseBar(binding.proBar1, binding.btnStartPB1, BAR1)
         }
         binding.btnCancelPB1.setOnClickListener {
-            viewModel.cancelBar1(binding.btnStartPB1)
+            binding.btnPausePB1.isEnabled = FALSE
+            it.isEnabled = FALSE
+            viewModel.cancelBar(binding.proBar1, binding.btnStartPB1, BAR1)
         }
+
+        // Bar - 2
         binding.btnStartPB2.setOnClickListener {
-//            viewModel.progressBar1(viewModel.progress, it, binding.proBar1)
-            GlobalScope.launch(Dispatchers.Main) {
-                it.isEnabled = FALSE
-                val success = withContext(Dispatchers.IO){
-                    prueba1(binding.proBar2)
-                }
-                it.isEnabled = TRUE
-            }
+            binding.btnPausePB2.isEnabled = TRUE
+            binding.btnCancelPB2.isEnabled = TRUE
+            viewModel.startBar(binding.proBar2, it, BAR2, binding.btnPausePB2)
+
         }
-
-
+        binding.btnPausePB2.setOnClickListener {
+            viewModel.pauseBar(binding.proBar2, binding.btnStartPB2, BAR2)
+        }
+        binding.btnCancelPB2.setOnClickListener {
+            binding.btnPausePB2.isEnabled = FALSE
+            it.isEnabled = FALSE
+            viewModel.cancelBar(binding.proBar2, binding.btnStartPB2, BAR2)
+        }
 
 
 
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
+    private fun setBarStatus(bar1: ProgressBar, bar2: ProgressBar) {
+        bar1.progress = viewModel.progress1.value!!
+        bar1.max = MAX_BAR
+
+        bar2.progress = viewModel.progress2.value!!
+        bar2.max = MAX_BAR
+
     }
 
-
-    private suspend fun startBar(bar: ProgressBar){
-        var progres = 0
-//        while (bar.progress )
+    override fun onDestroyView() {
+        super.onDestroyView()
+        saveStatusBars()
     }
 
-    private fun prueba1(bar: ProgressBar){
-//        Thread.sleep(2_000)
-        val subida = 1
-        bar.progress = 0
-        while (bar.progress < bar.max){
-            bar.incrementProgressBy(subida)
-            Thread.sleep(100)
-        }
+    private fun saveStatusBars() {
+        viewModel.setProgress1(binding.proBar1.progress)
+        viewModel.setProgress2(binding.proBar2.progress)
     }
+
 
 }

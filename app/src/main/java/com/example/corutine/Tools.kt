@@ -15,23 +15,16 @@ import kotlin.random.Random
 
 const val TAG = "break"
 
-sealed class  Resultado {
-    data class Exitoso (val data : String) : Resultado()
-    data class Error (val ex : Exception) : Resultado()
-}
 
-suspend fun progresBarLive(bar: ProgressBar) {
+suspend fun progresBarLive(bar: ProgressBar, status : Int, btnPausa : View) {
     return withContext(Dispatchers.IO) {
-        Log.d(TAG, "doLogin ${Thread.currentThread().name}")
         val subida = 1
-        bar.progress = 0
-        println("------------------------------------------------")
+        bar.progress = status
         while (bar.progress < bar.max){
             bar.incrementProgressBy(subida)
             Thread.sleep(100)
         }
-        println("...............................................")
-
+        btnPausa.isEnabled = FALSE
     }
 
 }
