@@ -103,12 +103,14 @@ class MainViewModel : ViewModel() {
         if (nBar == 1){
             if (job1 != null){
                 job1!!.cancel()
+                disenableBar1()
                 setProgress1(bar.progress)
                 btnStart.isEnabled = Boolean.TRUE
             }
         } else {
             if (job2 != null){
                 job2!!.cancel()
+                disenableBar2()
                 setProgress2(bar.progress)
                 btnStart.isEnabled = Boolean.TRUE
             }
